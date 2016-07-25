@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Clock</string>
-    <string name="title_activity_clock">Clock</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="description">Shout-out to my shining stars</string>
-    <string name="vk">Find me here: <a href="http://vk.com/tonyshkurenko">vk.com/tonyshkurenko</a></string>
+  <string name="app_name">Clock</string>
+  <string name="title_activity_clock">Clock</string>
+  <string name="description">Shout-out to my shining stars</string>
+  <string name="vk">Find me here: <a href="http://vk.com/tonyshkurenko">vk.com/tonyshkurenko</a></string>
+  <string name="pref_dream_text_key">pref_dream_text</string>
+  <string name="pref_dream_text_default">zzzZZZzzz</string>
+  <string name="pref_dream_text_title">Ticker text</string>
 
 </resources>

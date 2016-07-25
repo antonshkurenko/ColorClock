@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cullycross.clock" >
+    package="cullycross.clock">
+
+    <uses-feature
+        android:name="android.software.live_wallpaper"
+        android:required="true">
+    </uses-feature>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <service
             android:name=".ValtoneClock"
             android:enabled="true"
@@ -14,27 +19,40 @@
             android:label="Valtone Color Clock"
             android:permission="android.permission.BIND_WALLPAPER">
             <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" >
+                <action android:name="android.service.wallpaper.WallpaperService">
                 </action>
             </intent-filter>
+
             <meta-data
                 android:name="android.service.wallpaper"
-                android:resource="@xml/valtone_clock" >
+                android:resource="@xml/color_clock_wallpaper_info">
             </meta-data>
         </service>
+
         <activity
             android:name=".Clock"
-            android:label="@string/title_activity_clock" >
+            android:label="@string/title_activity_clock">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-    </application>
+        <activity android:name=".ColorClockDayDreamSettingsActivity"/> <!-- This service is only used on devices with API v17+ -->
+        <service
+            android:name=".ColorClockDayDream"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.dreams.DreamService"/>
 
-    <uses-feature
-        android:name="android.software.live_wallpaper"
-        android:required="true" >
-    </uses-feature>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+            <!-- Point to additional information for this dream -->
+            <meta-data
+                android:name="android.service.dream"
+                android:resource="@xml/color_clock_day_dream_info"/>
+        </service>
+    </application>
 
 </manifest>
