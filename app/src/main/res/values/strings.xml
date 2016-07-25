@@ -4,8 +4,7 @@
     <string name="app_name">Clock</string>
     <string name="title_activity_clock">Clock</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="description">Shout-out to my shining stars</string>
-    <string name="vk">Find me here: <a href="http://vk.com/cullycross">vk.com/cullycross</a></string>
+    <string name="vk">Find me here: <a href="http://vk.com/tonyshkurenko">vk.com/tonyshkurenko</a></string>
 
 </resources>
