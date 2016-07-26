@@ -27,7 +27,7 @@ import android.preference.PreferenceFragment;
 
     @Override public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      addPreferencesFromResource(R.xml.color_clock_day_dream_prefs);
+      addPreferencesFromResource(R.xml.color_clock_prefs);
     }
   }
 }

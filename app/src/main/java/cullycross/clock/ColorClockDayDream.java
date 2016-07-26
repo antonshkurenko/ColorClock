@@ -15,15 +15,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import java.util.Random;
 
-/**
- * This class is a sample implementation of a DreamService. When activated, a
- * TextView will repeatedly, move from the left to the right of screen, at a
- * random y-value.
- * The generated {@link ColorClockDayDreamSettingsActivity} allows
- * the user to change the text which is displayed.
- * <p />
- * Daydreams are only available on devices running API v17+.
- */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1) public class ColorClockDayDream
     extends DreamService {
 
