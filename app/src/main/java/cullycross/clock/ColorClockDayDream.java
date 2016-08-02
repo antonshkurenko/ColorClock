@@ -1,41 +1,28 @@
 package cullycross.clock;
 
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.TimeInterpolator;
 import android.annotation.TargetApi;
-import android.content.SharedPreferences;
+import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.service.dreams.DreamService;
-import android.view.ViewPropertyAnimator;
-import android.view.animation.LinearInterpolator;
-import android.widget.TextView;
-import java.util.Random;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1) public class ColorClockDayDream
     extends DreamService {
 
-  private static final TimeInterpolator sInterpolator = new LinearInterpolator();
-  private final Random mRandom = new Random();
   private final Point mPointSize = new Point();
-  private TextView mDreamTextView;
-  private ViewPropertyAnimator mAnimator;
-  private final AnimatorListener mAnimListener = new AnimatorListenerAdapter() {
 
-    @Override public void onAnimationEnd(Animator animation) {
-      // Start animation again
-      startTextViewScrollAnimation();
-    }
-  };
+  private ColorClockView mColorClockView;
 
   @Override public void onAttachedToWindow() {
     super.onAttachedToWindow();
 
     // Exit dream upon user touch?
-    setInteractive(false);
+    setInteractive(true);
 
     // Hide system UI?
     setFullscreen(true);
@@ -44,64 +31,79 @@ import java.util.Random;
     setScreenBright(true);
 
     // Set the content view, just like you would with an Activity.
-    setContentView(R.layout.color_clock_day_dream);
-
-    mDreamTextView = (TextView) findViewById(R.id.dream_text);
-    mDreamTextView.setText(getTextFromPreferences());
+    mColorClockView = new ColorClockView(this);
+    setContentView(mColorClockView);
   }
 
   @Override public void onDreamingStarted() {
     super.onDreamingStarted();
 
-    // TODO: Begin animations or other behaviors here.
-
-    startTextViewScrollAnimation();
-  }
-
-  @Override public void onDreamingStopped() {
-    super.onDreamingStopped();
-
-    // TODO: Stop anything that was started in onDreamingStarted()
-
-    mAnimator.cancel();
-  }
-
-  @Override public void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-
-    // TODO: Dismantle resources
-    // (for example, detach from handlers and listeners).
-  }
-
-  private String getTextFromPreferences() {
-    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    return prefs.getString(getString(R.string.pref_dream_text_key),
-        getString(R.string.pref_dream_text_default));
-  }
-
-  private void startTextViewScrollAnimation() {
     // Refresh Size of Window
     getWindowManager().getDefaultDisplay().getSize(mPointSize);
 
     final int windowWidth = mPointSize.x;
     final int windowHeight = mPointSize.y;
 
-    // Move TextView so it's moved all the way to the left
-    mDreamTextView.setTranslationX(-mDreamTextView.getWidth());
+    mColorClockView.editConfiguration(windowWidth, windowHeight);
+    mColorClockView.start();
+  }
 
-    // Move TextView to random y value
-    final int yRange = windowHeight - mDreamTextView.getHeight();
-    mDreamTextView.setTranslationY(mRandom.nextInt(yRange));
+  @Override public void onDreamingStopped() {
+    super.onDreamingStopped();
 
-    // Create an Animator and keep a reference to it
-    mAnimator = mDreamTextView.animate()
-        .translationX(windowWidth)
-        .setDuration(3000)
-        .setStartDelay(500)
-        .setListener(mAnimListener)
-        .setInterpolator(sInterpolator);
+    mColorClockView.stop();
+  }
 
-    // Start the animation
-    mAnimator.start();
+  @Override public void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+
+    mColorClockView.stop();
+  }
+
+  // todo(@tonyshkurenko), 8/3/16: make it work
+  static class ColorClockView extends SurfaceView
+      implements ColorClock.OnDrawListener, SurfaceHolder.Callback {
+
+    private final ColorClock mColorClock;
+
+    public ColorClockView(Context context) {
+      super(context);
+      mColorClock = new ColorClock(context);
+      mColorClock.setOnDrawListener(this);
+      getHolder().addCallback(this);
+    }
+
+    @Nullable @Override public Canvas onBeforeDraw() {
+      return getHolder().lockCanvas();
+    }
+
+    @Override public void onAfterDraw(@NonNull Canvas canvas) {
+      getHolder().unlockCanvasAndPost(canvas);
+    }
+
+    public void start() {
+      mColorClock.start();
+    }
+
+    public void stop() {
+      mColorClock.stop();
+    }
+
+    public void editConfiguration(int width, int height) {
+      mColorClock.editConfiguration(width, height);
+    }
+
+    @Override public void surfaceCreated(SurfaceHolder surfaceHolder) {
+      //mColorClock.start();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int width, int height) {
+      mColorClock.editConfiguration(width, height);
+    }
+
+    @Override public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+      mColorClock.stop();
+    }
   }
 }
