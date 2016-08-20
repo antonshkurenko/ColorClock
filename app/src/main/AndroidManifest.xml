@@ -48,7 +48,8 @@
 
     <service
         android:name=".ColorClockDayDream"
-        android:exported="true">
+        android:exported="true"
+        android:permission="android.permission.BIND_DREAM_SERVICE">
       <intent-filter>
         <action android:name="android.service.dreams.DreamService"/>
 

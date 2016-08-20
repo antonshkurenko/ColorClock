@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">Clock</string>
+  <string name="app_name">Color Clock</string>
   <string name="title_activity_clock">Clock</string>
   <string name="description">Shout-out to my shining stars</string>
   <string name="vk">Find me here: <a href="http://vk.com/tonyshkurenko">vk.com/tonyshkurenko</a></string>
