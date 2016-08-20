@@ -15,6 +15,11 @@ import java.util.Locale;
  * @since 8/20/16
  */
 
+/**
+ * // todo(@tonyshkurenko), 8/20/16: add positioning with seekbar?
+ * // todo(@tonyshkurenko), 8/20/16: add option to make clock more brighted with seek bar?
+ */
+
 final class Constants {
 
   private Constants() {
