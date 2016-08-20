@@ -1,9 +1,14 @@
 package cullycross.clock;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Handler;
 import android.service.wallpaper.WallpaperService;
-import android.support.annotation.NonNull;
 import android.view.SurfaceHolder;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class ColorClockWallpaperService extends WallpaperService {
 
@@ -11,40 +16,87 @@ public class ColorClockWallpaperService extends WallpaperService {
     return new ColorClockEngine();
   }
 
-  private class ColorClockEngine extends Engine implements ColorClock.OnDrawListener {
+  private class ColorClockEngine extends Engine {
 
-    final ColorClock mColorClock;
+    private final Runnable mDrawRunner = new Runnable() {
+      @Override public void run() {
+        draw();
+      }
+    };
+
+    private final Calendar mCalendar = Calendar.getInstance();
+
+    private final Handler mHandler = new Handler();
+    private final Date mDate = new Date();
+    private boolean mVisible = true;
+    private int mHalfWidth, mHalfHeight;
 
     ColorClockEngine() {
-      mColorClock = new ColorClock(ColorClockWallpaperService.this);
-      mColorClock.setOnDrawListener(this);
+      Constants.PAINT.setTypeface(Constants.PAINT.setTypeface(
+          Typeface.createFromAsset(getAssets(), Constants.FONTS_OPEN_SANS_REGULAR_TTF)));
     }
 
     @Override public void onVisibilityChanged(boolean visible) {
       if (visible) {
-        mColorClock.start();
+        start();
       } else {
-        mColorClock.stop();
+        stop();
       }
     }
 
     @Override public void onSurfaceDestroyed(SurfaceHolder holder) {
       super.onSurfaceDestroyed(holder);
-      mColorClock.stop();
+      stop();
     }
 
     @Override
     public void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height) {
       super.onSurfaceChanged(holder, format, width, height);
-      mColorClock.editConfiguration(width, height);
+      mHalfWidth = width >> 1;
+      mHalfHeight = height >> 1;
+      Constants.PAINT.setTextSize(width / 6);
     }
 
-    @Override public Canvas onBeforeDraw() {
-      return getSurfaceHolder().lockCanvas();
-    }
+    private void draw() {
 
-    @Override public void onAfterDraw(@NonNull Canvas canvas) {
+      mHandler.removeCallbacks(mDrawRunner);
+      if (mVisible) {
+        mHandler.postDelayed(mDrawRunner, Constants.DELAY_MILLIS);
+      }
+
+      final Canvas canvas = getSurfaceHolder().lockCanvas();
+
+      if (canvas == null) {
+        return;
+      }
+
+      mDate.setTime(System.currentTimeMillis());
+
+      final String date = Constants.DATE_FORMAT.format(mDate);
+
+      mCalendar.setTime(mDate);
+
+      final int hours = mCalendar.get(Calendar.HOUR_OF_DAY);
+      final int minutes = mCalendar.get(Calendar.MINUTE);
+      final int seconds = mCalendar.get(Calendar.SECOND);
+
+      canvas.drawColor(
+          Color.parseColor(String.format(Locale.US, "#%02d%02d%02d", hours, minutes, seconds)));
+
+      canvas.drawText(date, mHalfWidth - Constants.PAINT.measureText(date) / 2, mHalfHeight,
+          Constants.PAINT);
+
       getSurfaceHolder().unlockCanvasAndPost(canvas);
+    }
+
+    private void start() {
+      mVisible = true;
+      mHandler.post(mDrawRunner);
+    }
+
+    private void stop() {
+      mVisible = false;
+      mHandler.removeCallbacks(mDrawRunner);
     }
   }
 }
