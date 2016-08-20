@@ -1,11 +1,10 @@
-package cullycross.clock;
+package io.github.tonyshkurenko.clock;
 
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.dreams.DreamService;
 
 public class ClockActivity extends Activity {
 

@@ -1,4 +1,4 @@
-package cullycross.clock;
+package io.github.tonyshkurenko.clock;
 
 import android.annotation.TargetApi;
 import android.content.Context;

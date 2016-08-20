@@ -1,4 +1,4 @@
-package cullycross.clock;
+package io.github.tonyshkurenko.clock;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

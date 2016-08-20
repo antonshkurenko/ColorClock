@@ -1,19 +1,12 @@
-package cullycross.clock;
+package io.github.tonyshkurenko.clock;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
-/**
- * A settings Activity for {@link ColorClockDayDream}.
- * <p />
- * A DreamService can only be used on devices with API v17+, so it is safe
- * for us to use a {@link PreferenceFragment} here.
- */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB) public class ColorClockSettingsActivity
     extends AppCompatActivity {
 
